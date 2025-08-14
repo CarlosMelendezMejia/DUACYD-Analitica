@@ -8,8 +8,15 @@ from flask import (
     request, redirect, url_for, session, flash
 )
 
-# Si vas a usar MySQL:
-# pip install mysql-connector-python
+# Carga variables de entorno desde .env
+# pip install python-dotenv
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
+# Conector MySQL opcional
 try:
     import mysql.connector  # type: ignore
 except Exception:
@@ -21,8 +28,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 # Configuración base
 # -----------------------------------------------------------------------------
 app = Flask(__name__, static_folder="static", template_folder="templates")
-
-# Cambia este secret en producción (usa os.urandom(24) o variable de entorno)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=8)
 
@@ -81,21 +86,19 @@ def get_db_connection():
 def get_user_by_username(username: str):
     """
     Busca al usuario por username en BD.
-    Debe existir una tabla `usuarios` con:
-    - id INT PK AI
-    - username VARCHAR(100) UNIQUE
-    - password_hash VARCHAR(255)
-    - nombre VARCHAR(150)  (nombre a mostrar)
-    - rol VARCHAR(50)      (opcional)
+    Tabla esperada `usuarios`:
+      id INT PK AI
+      username VARCHAR(100) UNIQUE
+      password_hash VARCHAR(255)
+      nombre VARCHAR(150)
+      rol VARCHAR(50) (opcional)
     """
     conn = get_db_connection()
     if conn is None:
         # Fallback DEMO
-        # Usuario demo: admin / admin123
         demo = {
             "id": 1,
             "username": "admin",
-            # hash de "admin123"
             "password_hash": generate_password_hash("admin123"),
             "nombre": "Administración DUACyD",
             "rol": "admin",
@@ -124,11 +127,10 @@ def get_user_by_username(username: str):
 
 
 # -----------------------------------------------------------------------------
-# Rutas
+# Rutas: Auth y dashboard
 # -----------------------------------------------------------------------------
 @app.route("/", methods=["GET"])
 def root():
-    # Redirige al login si no hay sesión, al dashboard si ya inició sesión.
     if session.get("usuario_id"):
         return redirect(url_for("dashboard"))
     return redirect(url_for("login"))
@@ -136,7 +138,6 @@ def root():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    # Renderiza la plantilla dada (ya la tienes) y gestiona el POST
     if request.method == "POST":
         username = request.form.get("username", "").strip()
         password = request.form.get("password", "").strip()
@@ -145,10 +146,7 @@ def login():
             return render_template("login.html", error="Completa usuario y contraseña.")
 
         user = get_user_by_username(username)
-        if not user:
-            return render_template("login.html", error="Usuario o contraseña inválidos.")
-
-        if not check_password_hash(user["password_hash"], password):
+        if not user or not check_password_hash(user["password_hash"], password):
             return render_template("login.html", error="Usuario o contraseña inválidos.")
 
         # Inicia sesión
@@ -160,7 +158,6 @@ def login():
 
         return redirect(url_for("dashboard"))
 
-    # GET
     return render_template("login.html")
 
 
@@ -170,22 +167,55 @@ def dashboard():
     return render_template("dashboard.html")
 
 
-# ----------------------- Módulos principales -----------------------
+# -----------------------------------------------------------------------------
+# Módulos principales
+# -----------------------------------------------------------------------------
+# SUAyED: ahora renderiza un submenú propio con cards por carrera
 @app.route("/modulo/suayed")
 @login_required
 def modulo_suayed():
-    html = _module_placeholder(
-        titulo="SUAyED",
-        subtitulo="Carreras: Derecho, Relaciones Internacionales, Economía",
-        descripcion=(
-            "Explora matrícula, retención, eficiencia terminal, "
-            "trayectorias y cohorte por periodo."
-        ),
-        icono="mortarboard"
-    )
-    return render_template_string(html)
+    # Lee (opcional) el periodo seleccionado por querystring para mantener estado
+    periodo = request.args.get("periodo")
+    return render_template("suayed_menu.html", periodo=periodo)
+
+# Subrutas SUAyED por carrera
+@app.route("/modulo/suayed/<carrera>/indicadores")
+@login_required
+def suayed_indicadores(carrera):
+    periodo = request.args.get("periodo")
+    titulo = f"Indicadores — {carrera.replace('-', ' ').title()} (SUAyED)"
+    cuerpo = [
+        "<p>Vista de indicadores en construcción.</p>",
+        f"<p><strong>Periodo:</strong> {periodo}</p>" if periodo else ""
+    ]
+    return render_template_string(_simple_page(titulo, "".join(cuerpo)))
 
 
+@app.route("/modulo/suayed/<carrera>/cohortes")
+@login_required
+def suayed_cohortes(carrera):
+    periodo = request.args.get("periodo")
+    titulo = f"Cohortes — {carrera.replace('-', ' ').title()} (SUAyED)"
+    cuerpo = [
+        "<p>Vista de cohortes en construcción.</p>",
+        f"<p><strong>Periodo:</strong> {periodo}</p>" if periodo else ""
+    ]
+    return render_template_string(_simple_page(titulo, "".join(cuerpo)))
+
+
+@app.route("/modulo/suayed/<carrera>/reportes")
+@login_required
+def suayed_reportes(carrera):
+    periodo = request.args.get("periodo")
+    titulo = f"Reportes — {carrera.replace('-', ' ').title()} (SUAyED)"
+    cuerpo = [
+        "<p>Generación y descarga de reportes en construcción.</p>",
+        f"<p><strong>Periodo:</strong> {periodo}</p>" if periodo else ""
+    ]
+    return render_template_string(_simple_page(titulo, "".join(cuerpo)))
+
+
+# Otros módulos (placeholders)
 @app.route("/modulo/edco")
 @login_required
 def modulo_edco():
@@ -216,7 +246,9 @@ def modulo_cle():
     return render_template_string(html)
 
 
-# ----------------------- Auxiliares del menú -----------------------
+# -----------------------------------------------------------------------------
+# Auxiliares del menú
+# -----------------------------------------------------------------------------
 @app.route("/ayuda/<modulo>")
 @login_required
 def ayuda_modulo(modulo: str):
@@ -278,9 +310,7 @@ def logout():
 # Helpers de HTML minimal (placeholders) para no requerir más plantillas ahora
 # -----------------------------------------------------------------------------
 def _module_placeholder(titulo: str, subtitulo: str, descripcion: str, icono: str = "grid"):
-    """
-    Devuelve una página mínima para el módulo, con estilos Bootstrap, sin archivo extra.
-    """
+    """Devuelve una página mínima para un módulo (EDCO/CLE), con Bootstrap."""
     return f"""
     <!doctype html>
     <html lang="es">
@@ -443,7 +473,5 @@ def internal_error(e):
 # Main
 # -----------------------------------------------------------------------------
 if __name__ == "__main__":
-    # Ejecuta con: python app.py
-    # En producción usa gunicorn/uwsgi + un servidor web frontal (nginx/apache).
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port, debug=True)
