@@ -704,3 +704,479 @@
   border: none;
   padding: 0;
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  
+  :root {
+    --color-azul-unam: #002147;
+    --color-dorado-unam: #C9A23F;
+    --color-azul-claro: #0066CC;
+    --color-azul-suave: #0b2f59;
+    --color-gris-suave: #f8fafc;
+    --sombra-suave: 0 10px 25px rgba(0, 33, 71, 0.1);
+    --sombra-intensa: 0 20px 40px rgba(0, 33, 71, 0.15);
+    --sombra-card: 0 8px 25px rgba(0, 33, 71, 0.08);
+    --gradiente-principal: linear-gradient(135deg, var(--color-azul-unam) 0%, var(--color-azul-suave) 100%);
+    --gradiente-dorado: linear-gradient(135deg, var(--color-dorado-unam) 0%, #d4af37 100%);
+    --gradiente-card: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%);
+    --gradiente-suayed: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(201, 162, 63, 0.05) 100%);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--gradiente-principal);
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 25% 75%, rgba(0, 102, 204, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 75% 25%, rgba(201, 162, 63, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  .navbar {
+    background: var(--gradiente-principal) !important;
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: var(--sombra-suave);
+  }
+
+  .navbar-brand {
+    font-weight: 800;
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+  }
+
+  .navbar-brand:hover {
+    transform: scale(1.05);
+  }
+
+  .text-white-50 {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+  }
+
+  .btn-outline-light {
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+  }
+
+  .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--color-dorado-unam);
+    transform: translateY(-1px);
+  }
+
+  .app-window {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    max-width: 1200px;
+    margin: 2rem auto;
+    border-radius: 24px;
+    box-shadow: var(--sombra-intensa);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .app-titlebar {
+    background: linear-gradient(90deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.9) 100%);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(0, 33, 71, 0.08);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .dot:hover {
+    transform: scale(1.2);
+  }
+
+  .dot.red {
+    background: linear-gradient(135deg, #ff5f57 0%, #ff3b30 100%);
+    box-shadow: 0 2px 8px rgba(255, 95, 87, 0.3);
+  }
+
+  .dot.yellow {
+    background: linear-gradient(135deg, #ffbd2e 0%, #ffa000 100%);
+    box-shadow: 0 2px 8px rgba(255, 189, 46, 0.3);
+  }
+
+  .dot.green {
+    background: linear-gradient(135deg, #28c840 0%, #00c851 100%);
+    box-shadow: 0 2px 8px rgba(40, 200, 64, 0.3);
+  }
+
+  .titlebar-text {
+    margin-left: 0.5rem;
+    color: var(--color-azul-unam);
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+  }
+
+  .container {
+    padding: 2rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    background: var(--gradiente-principal);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+  }
+
+  .page-subtitle {
+    color: #6b7280;
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  .toolbar {
+    background: rgba(248, 250, 252, 0.5);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 33, 71, 0.08);
+    border-radius: 16px;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .form-select {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+  }
+
+  .form-select:focus {
+    border-color: var(--color-dorado-unam);
+    box-shadow: 0 0 0 3px rgba(201, 162, 63, 0.1);
+    background: white;
+  }
+
+  .card-entry {
+    background: var(--gradiente-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Carreras principales - efectos especiales */
+  .career-card {
+    position: relative;
+  }
+
+  .career-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradiente-dorado);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  .career-card:hover::before {
+    transform: scaleX(1);
+  }
+
+  .career-card::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    right: -30px;
+    width: 80px;
+    height: 80px;
+    background: var(--gradiente-suayed);
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+
+  .career-card:hover::after {
+    opacity: 0.6;
+    transform: translateX(-20px);
+  }
+
+  .card-entry:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: var(--sombra-intensa);
+    border-color: rgba(201, 162, 63, 0.3);
+  }
+
+  .card-entry .card-body {
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .icon-badge {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(201, 162, 63, 0.15) 0%, rgba(201, 162, 63, 0.05) 100%);
+    border: 2px solid rgba(201, 162, 63, 0.2);
+    color: var(--color-azul-unam);
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+  }
+
+  /* Iconos específicos por carrera */
+  .derecho-icon {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.05) 100%);
+    border-color: rgba(0, 102, 204, 0.2);
+  }
+
+  .ri-icon {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(34, 197, 94, 0.05) 100%);
+    border-color: rgba(34, 197, 94, 0.2);
+  }
+
+  .economia-icon {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(168, 85, 247, 0.05) 100%);
+    border-color: rgba(168, 85, 247, 0.2);
+  }
+
+  .card-entry:hover .icon-badge {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 8px 25px rgba(201, 162, 63, 0.3);
+  }
+
+  .card-entry:hover .derecho-icon {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.9) 0%, rgba(0, 102, 204, 0.7) 100%);
+    color: white;
+  }
+
+  .card-entry:hover .ri-icon {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.9) 0%, rgba(34, 197, 94, 0.7) 100%);
+    color: white;
+  }
+
+  .card-entry:hover .economia-icon {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.9) 0%, rgba(168, 85, 247, 0.7) 100%);
+    color: white;
+  }
+
+  .career-title {
+    color: var(--color-azul-unam);
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .career-subtitle {
+    color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .card-text {
+    color: #4b5563;
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .btn-primary {
+    background: var(--gradiente-dorado);
+    border: none;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #b28e34 0%, #c9a23f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(201, 162, 63, 0.3);
+  }
+
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+
+  .btn-outline-secondary {
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    color: #6b7280;
+    transition: all 0.3s ease;
+    font-weight: 500;
+  }
+
+  .btn-outline-secondary:hover {
+    background: var(--color-azul-unam);
+    border-color: var(--color-azul-unam);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-card);
+  }
+
+  /* Botones específicos para cada carrera */
+  .derecho-card .btn-outline-secondary:hover {
+    background: linear-gradient(135deg, #0066CC 0%, #004499 100%);
+    border-color: #0066CC;
+  }
+
+  .ri-card .btn-outline-secondary:hover {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    border-color: #22c55e;
+  }
+
+  .economia-card .btn-outline-secondary:hover {
+    background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+    border-color: #a855f7;
+  }
+
+  .quick-access-grid {
+    margin-top: 3rem;
+  }
+
+  .quick-access-card {
+    background: rgba(248, 250, 252, 0.6);
+    backdrop-filter: blur(5px);
+  }
+
+  .quick-access-card:hover {
+    background: var(--gradiente-card);
+  }
+
+  .footer-note {
+    color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    background: rgba(248, 250, 252, 0.5);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 33, 71, 0.05);
+    margin-top: 2rem;
+  }
+
+  hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0, 33, 71, 0.1), transparent);
+    margin: 2rem 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .app-window {
+      margin: 1rem;
+      border-radius: 16px;
+    }
+    
+    .container {
+      padding: 1.5rem;
+    }
+    
+    .page-header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .card-entry .card-body {
+      padding: 1.5rem;
+    }
+    
+    .icon-badge {
+      width: 48px;
+      height: 48px;
+      font-size: 1.25rem;
+    }
+
+    .toolbar {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  /* Animación de entrada escalonada */
+  .career-cards .col {
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  .career-cards .col:nth-child(1) { animation-delay: 0.1s; }
+  .career-cards .col:nth-child(2) { animation-delay: 0.2s; }
+  .career-cards .col:nth-child(3) { animation-delay: 0.3s; }
+
+  .quick-access-grid .col {
+    animation: fadeInUp 0.6s ease-out backwards;
+  }
+
+  .quick-access-grid .col:nth-child(1) { animation-delay: 0.4s; }
+  .quick-access-grid .col:nth-child(2) { animation-delay: 0.5s; }
+  .quick-access-grid .col:nth-child(3) { animation-delay: 0.6s; }
