@@ -185,6 +185,12 @@ def modulo_suayed():
     periodo = request.args.get("periodo")
     return render_template("suayed_menu.html", periodo=periodo)
 
+# Submenú específico de Derecho: indicadores institucionales
+@app.route("/modulo/suayed/derecho")
+@login_required
+def suayed_derecho_menu():
+    return render_template("derechosua_menu.html")
+
 # Subrutas SUAyED por carrera
 @app.route("/modulo/suayed/<carrera>/indicadores")
 @login_required

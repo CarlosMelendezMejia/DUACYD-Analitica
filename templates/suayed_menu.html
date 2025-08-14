@@ -101,13 +101,13 @@
                 eficiencia terminal y seguimiento de trayectorias académicas.
               </p>
               <div class="d-grid gap-2 mt-auto">
-                <a class="btn btn-primary" href="#">
+                <a class="btn btn-primary" href="{{ url_for('suayed_derecho_menu') }}">
                   <i class="fas fa-chart-line me-2"></i>Indicadores Generales
                 </a>
-                <a class="btn btn-outline-secondary" href="#">
+                <a class="btn btn-outline-secondary" href="{{ url_for('suayed_cohortes', carrera='derecho') }}">
                   <i class="fas fa-users me-2"></i>Análisis por Cohortes
                 </a>
-                <a class="btn btn-outline-secondary" href="#">
+                <a class="btn btn-outline-secondary" href="{{ url_for('suayed_reportes', carrera='derecho') }}">
                   <i class="fas fa-file-chart-bar me-2"></i>Reportes Ejecutivos
                 </a>
               </div>
