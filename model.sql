@@ -454,7 +454,9 @@ ON DUPLICATE KEY UPDATE descripcion=VALUES(descripcion);
 
 -- Jefaturas (ejemplo)
 INSERT INTO jefatura (id_area, nombre, descripcion)
-SELECT a.id_area, 'Jefatura '||a.nombre, CONCAT('Jefatura de ', a.nombre)
+SELECT a.id_area,
+       CONCAT('Jefatura ', a.nombre) AS nombre,
+       CONCAT('Jefatura de ', a.nombre) AS descripcion
 FROM area a
 ON DUPLICATE KEY UPDATE descripcion=VALUES(descripcion);
 
