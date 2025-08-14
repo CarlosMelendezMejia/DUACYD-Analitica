@@ -440,9 +440,8 @@ SELECT r.id_rol, p.id_permiso
 FROM rol r JOIN permiso p ON p.clave IN ('ver_dashboard')
 WHERE r.nombre IN ('Lector');
 
--- Usuario admin (reemplaza password_hash por un hash real, p. ej. bcrypt)
 INSERT INTO usuario (nombre, apellidos, correo, password_hash, activo)
-VALUES ('Admin','DUACyD','admin@duacyd.mx','$2y$10$REEMPLAZA_ESTE_HASH',1)
+VALUES ('Admin','DUACyD','admin','scrypt:32768:8:1$c1o8E5geeglCLDlR$5f0e26de3b06a728cb60d2cf9fdc2449dae023f293daa6312eaea8d6a7aa4e542060dd0a4202e8e5fe6711d070d78d74c1161f9f56462eeb86a247e9df158dfc',1)
 ON DUPLICATE KEY UPDATE activo=VALUES(activo);
 
 -- Áreas
@@ -474,7 +473,7 @@ ON DUPLICATE KEY UPDATE descripcion=VALUES(descripcion);
 INSERT IGNORE INTO usuario_area (id_usuario, id_area)
 SELECT u.id_usuario, a.id_area
 FROM usuario u, area a
-WHERE u.correo='admin@duacyd.mx';
+WHERE u.correo='admin';
 
 -- Frecuencias y unidades
 INSERT INTO cat_frecuencia (clave, descripcion) VALUES
@@ -590,7 +589,7 @@ ON DUPLICATE KEY UPDATE activo=VALUES(activo);
 INSERT IGNORE INTO usuario_rol (id_usuario, id_rol)
 SELECT u.id_usuario, r.id_rol
 FROM usuario u, rol r
-WHERE u.correo='admin@duacyd.mx' AND r.nombre='Administrador';
+WHERE u.correo='admin' AND r.nombre='Administrador';
 
 -- =================================
 -- 11) ÍNDICES RECOMENDADOS
