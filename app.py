@@ -99,7 +99,7 @@ def get_user_by_username(username: str):
         demo = {
             "id": 1,
             "username": "admin",
-            "password_hash": generate_password_hash("admin123"),
+            "password_hash": generate_password_hash("admin_duacyd"),
             "nombre": "Administración DUACyD",
             "rol": "admin",
         }
