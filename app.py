@@ -2,6 +2,7 @@ import os
 import logging
 from functools import wraps
 from datetime import timedelta
+import re
 
 from flask import (
     Flask, render_template, render_template_string,
@@ -52,6 +53,14 @@ def login_required(view_func):
             return redirect(url_for("login"))
         return view_func(*args, **kwargs)
     return wrapper
+
+
+# -----------------------------------------------------------------------------
+# Helpers de validación
+# -----------------------------------------------------------------------------
+def sanitize_param(value: str) -> str:
+    """Elimina caracteres no permitidos de parámetros recibidos."""
+    return re.sub(r"[^A-Za-z0-9_-]", "", value or "")
 
 
 # -----------------------------------------------------------------------------
@@ -182,7 +191,7 @@ def dashboard():
 @login_required
 def modulo_suayed():
     # Lee (opcional) el periodo seleccionado por querystring para mantener estado
-    periodo = request.args.get("periodo")
+    periodo = sanitize_param(request.args.get("periodo")) or None
     return render_template("suayed_menu.html", periodo=periodo)
 
 # Submenú específico de Derecho: indicadores institucionales
@@ -195,37 +204,46 @@ def suayed_derecho_menu():
 @app.route("/modulo/suayed/<carrera>/indicadores")
 @login_required
 def suayed_indicadores(carrera):
-    periodo = request.args.get("periodo")
+    carrera = sanitize_param(carrera)
+    periodo = sanitize_param(request.args.get("periodo")) or None
     titulo = f"Indicadores — {carrera.replace('-', ' ').title()} (SUAyED)"
-    cuerpo = [
-        "<p>Vista de indicadores en construcción.</p>",
-        f"<p><strong>Periodo:</strong> {periodo}</p>" if periodo else ""
-    ]
-    return render_template_string(_simple_page(titulo, "".join(cuerpo)))
+    cuerpo = """
+    <p>Vista de indicadores en construcción.</p>
+    {% if periodo %}
+    <p><strong>Periodo:</strong> {{ periodo | e }}</p>
+    {% endif %}
+    """
+    return _simple_page(titulo, cuerpo, periodo=periodo)
 
 
 @app.route("/modulo/suayed/<carrera>/cohortes")
 @login_required
 def suayed_cohortes(carrera):
-    periodo = request.args.get("periodo")
+    carrera = sanitize_param(carrera)
+    periodo = sanitize_param(request.args.get("periodo")) or None
     titulo = f"Cohortes — {carrera.replace('-', ' ').title()} (SUAyED)"
-    cuerpo = [
-        "<p>Vista de cohortes en construcción.</p>",
-        f"<p><strong>Periodo:</strong> {periodo}</p>" if periodo else ""
-    ]
-    return render_template_string(_simple_page(titulo, "".join(cuerpo)))
+    cuerpo = """
+    <p>Vista de cohortes en construcción.</p>
+    {% if periodo %}
+    <p><strong>Periodo:</strong> {{ periodo | e }}</p>
+    {% endif %}
+    """
+    return _simple_page(titulo, cuerpo, periodo=periodo)
 
 
 @app.route("/modulo/suayed/<carrera>/reportes")
 @login_required
 def suayed_reportes(carrera):
-    periodo = request.args.get("periodo")
+    carrera = sanitize_param(carrera)
+    periodo = sanitize_param(request.args.get("periodo")) or None
     titulo = f"Reportes — {carrera.replace('-', ' ').title()} (SUAyED)"
-    cuerpo = [
-        "<p>Generación y descarga de reportes en construcción.</p>",
-        f"<p><strong>Periodo:</strong> {periodo}</p>" if periodo else ""
-    ]
-    return render_template_string(_simple_page(titulo, "".join(cuerpo)))
+    cuerpo = """
+    <p>Generación y descarga de reportes en construcción.</p>
+    {% if periodo %}
+    <p><strong>Periodo:</strong> {{ periodo | e }}</p>
+    {% endif %}
+    """
+    return _simple_page(titulo, cuerpo, periodo=periodo)
 
 
 # Otros módulos (placeholders)
@@ -265,16 +283,16 @@ def modulo_cle():
 @app.route("/ayuda/<modulo>")
 @login_required
 def ayuda_modulo(modulo: str):
-    modulo = (modulo or "").upper()
-    cuerpo = f"""
-    <p>Esta sección de ayuda describe el uso del módulo <strong>{modulo}</strong>.</p>
+    modulo = sanitize_param(modulo).upper()
+    cuerpo = """
+    <p>Esta sección de ayuda describe el uso del módulo <strong>{{ modulo | e }}</strong>.</p>
     <ul>
       <li>Navega por periodos y filtros en la parte superior.</li>
       <li>Descarga reportes en CSV/XLSX desde el panel correspondiente.</li>
       <li>La ingesta de datos se realiza desde el menú principal &rarr; Plantillas / Ingesta.</li>
     </ul>
     """
-    return render_template_string(_simple_page("Ayuda del módulo", cuerpo))
+    return _simple_page("Ayuda del módulo", cuerpo, modulo=modulo)
 
 
 @app.route("/ingesta-datos")
@@ -284,7 +302,7 @@ def ingesta_datos():
     <p>Aquí podrás cargar datasets (CSV/XLSX) para alimentar los tableros.</p>
     <p>Próximamente: validaciones, vistas previas y bitácora de cargas.</p>
     """
-    return render_template_string(_simple_page("Ingesta de datos", cuerpo))
+    return _simple_page("Ingesta de datos", cuerpo)
 
 
 @app.route("/roles-permisos")
@@ -294,7 +312,7 @@ def roles_permisos():
     <p>Configura quién puede ver, subir y editar información.</p>
     <p>Próximamente: administración de roles, permisos y auditoría.</p>
     """
-    return render_template_string(_simple_page("Roles y permisos", cuerpo))
+    return _simple_page("Roles y permisos", cuerpo)
 
 
 @app.route("/plantillas-datos")
@@ -308,7 +326,7 @@ def plantillas_datos():
       <li>Plantilla CLE (CSV/XLSX)</li>
     </ul>
     """
-    return render_template_string(_simple_page("Plantillas de datos", cuerpo))
+    return _simple_page("Plantillas de datos", cuerpo)
 
 
 @app.route("/logout")
@@ -360,32 +378,78 @@ def _module_placeholder(titulo: str, subtitulo: str, descripcion: str, icono: st
     """
 
 
-def _simple_page(titulo: str, cuerpo_html: str) -> str:
+def _simple_page(titulo: str, cuerpo_template: str, **context) -> str:
     """Página auxiliar mínima con encabezado unificado."""
-    return f"""
+    cuerpo_html = render_template_string(cuerpo_template, **context)
+    template = """
     <!doctype html>
-    <html lang=\"es\">
+    <html lang="es">
     <head>
-      <meta charset=\"utf-8\"/>
-      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>
-      <title>{titulo} — DUACyD Analítica</title>
-      <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">
-      <link rel=\"stylesheet\" href=\"{url_for('static', filename='css/main.css')}\">
+      <meta charset="utf-8"/>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <title>{{ titulo | e }} — DUACyD Analítica</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
     </head>
-    <body class=\"menu-body\">
-      <nav class=\"navbar navbar-dark\">\n        <div class=\"container\">\n          <a class=\"navbar-brand d-flex align-items-center gap-2\" href=\"{url_for('dashboard')}\">\n            <i class=\"bi bi-grid-1x2\"></i>\n            <span class=\"fw-bold\">DUACyD Analítica</span>\n          </a>\n          <div class=\"d-flex align-items-center gap-3\">\n            <span class=\"user-badge\">\n              <i class=\"bi bi-person-circle me-2\"></i>{session.get('usuario_nombre','Usuario')}\n            </span>\n            <a href=\"{url_for('logout')}\" class=\"btn btn-outline-light btn-sm\">Salir</a>\n          </div>\n        </div>\n      </nav>
+    <body class="menu-body">
+      <nav class="navbar navbar-dark">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('dashboard') }}">
+            <i class="bi bi-grid-1x2"></i>
+            <span class="fw-bold">DUACyD Analítica</span>
+          </a>
+          <div class="d-flex align-items-center gap-3">
+            <span class="user-badge">
+              <i class="bi bi-person-circle me-2"></i>{{ session.get('usuario_nombre','Usuario') }}
+            </span>
+            <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm">Salir</a>
+          </div>
+        </div>
+      </nav>
 
-      <div class=\"app-window\">\n        <div class=\"app-titlebar\">\n          <div class=\"d-flex align-items-center gap-2\">\n            <span class=\"dot red\"></span>\n            <span class=\"dot yellow\"></span>\n            <span class=\"dot green\"></span>\n          </div>\n          <div class=\"titlebar-text\">\n            <i class=\"bi bi-layout-text-window me-2\"></i>{titulo}\n          </div>\n        </div>
+      <div class="app-window">
+        <div class="app-titlebar">
+          <div class="d-flex align-items-center gap-2">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="titlebar-text">
+            <i class="bi bi-layout-text-window me-2"></i>{{ titulo | e }}
+          </div>
+        </div>
 
-        <div class=\"app-header\">\n          <div class=\"d-flex justify-content-between align-items-start flex-wrap gap-3\">\n            <div class=\"brand\">\n              <div>\n                <h1>{titulo}</h1>\n                <small class=\"text-muted\">Sección</small>\n              </div>\n            </div>\n            <div class=\"text-end\">\n              <a href=\"{url_for('dashboard')}\" class=\"btn btn-primary\">Volver al menú</a>\n            </div>\n          </div>\n          <hr>\n        </div>
+        <div class="app-header">
+          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+            <div class="brand">
+              <div>
+                <h1>{{ titulo | e }}</h1>
+                <small class="text-muted">Sección</small>
+              </div>
+            </div>
+            <div class="text-end">
+              <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Volver al menú</a>
+            </div>
+          </div>
+          <hr>
+        </div>
 
-        <div class=\"app-body\">\n          <div class=\"container\">\n            <div class=\"card\">\n              <div class=\"card-body\">\n                {cuerpo_html}\n              </div>\n            </div>\n          </div>\n        </div>
+        <div class="app-body">
+          <div class="container">
+            <div class="card">
+              <div class="card-body">
+                {{ cuerpo_html | safe }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     </body>
     </html>
     """
+    return render_template_string(template, titulo=titulo, cuerpo_html=cuerpo_html)
 
 
 # -----------------------------------------------------------------------------
@@ -393,13 +457,13 @@ def _simple_page(titulo: str, cuerpo_html: str) -> str:
 # -----------------------------------------------------------------------------
 @app.errorhandler(404)
 def not_found(e):
-    return render_template_string(_simple_page("404 — No encontrado", "<p>La ruta solicitada no existe.</p>")), 404
+    return _simple_page("404 — No encontrado", "<p>La ruta solicitada no existe.</p>"), 404
 
 
 @app.errorhandler(500)
 def internal_error(e):
     logger.exception("Error interno del servidor")
-    return render_template_string(_simple_page("500 — Error interno", "<p>Ocurrió un error inesperado.</p>")), 500
+    return _simple_page("500 — Error interno", "<p>Ocurrió un error inesperado.</p>"), 500
 
 
 # -----------------------------------------------------------------------------
