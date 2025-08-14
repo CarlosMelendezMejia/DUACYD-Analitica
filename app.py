@@ -317,134 +317,66 @@ def logout():
 # Helpers de HTML minimal (placeholders) para no requerir más plantillas ahora
 # -----------------------------------------------------------------------------
 def _module_placeholder(titulo: str, subtitulo: str, descripcion: str, icono: str = "grid"):
-    """Devuelve una página mínima para un módulo (EDCO/CLE), con Bootstrap."""
+    """Devuelve una página mínima para un módulo (EDCO/CLE) con encabezado unificado."""
     return f"""
     <!doctype html>
-    <html lang="es">
+    <html lang=\"es\">
     <head>
-      <meta charset="utf-8"/>
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <meta charset=\"utf-8\"/>
+      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>
       <title>{titulo} — DUACyD Analítica</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-      <link rel="stylesheet" href="{url_for('static', filename='css/main.css')}">
+      <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">
+      <link href=\"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css\" rel=\"stylesheet\">
+      <link rel=\"stylesheet\" href=\"{url_for('static', filename='css/main.css')}\">
     </head>
-    <body>
-      <nav class="navbar navbar-dark topbar">
-        <div class="container">
-          <a class="navbar-brand d-flex align-items-center gap-2" href="{url_for('dashboard')}">
-            <img src="{url_for('static', filename='img/logo_duacyd.png')}" width="24" height="24">
-            <span class="fw-bold">DUACyD Analítica</span>
-          </a>
-          <div class="d-flex align-items-center gap-2">
-            <span class="text-white-50 small me-2">
-              <i class="bi bi-person-circle me-1"></i>{session.get('usuario_nombre','Usuario')}
-            </span>
-            <a href="{url_for('logout')}" class="btn btn-outline-light btn-sm">
-              <i class="bi bi-box-arrow-right me-1"></i>Salir
-            </a>
-          </div>
+    <body class=\"menu-body\">
+      <nav class=\"navbar navbar-dark\">
+        <div class=\"container\">
+          <a class=\"navbar-brand d-flex align-items-center gap-2\" href=\"{url_for('dashboard')}\">\n            <i class=\"bi bi-grid-1x2\"></i>\n            <span class=\"fw-bold\">DUACyD Analítica</span>\n          </a>
+          <div class=\"d-flex align-items-center gap-3\">\n            <span class=\"user-badge\">\n              <i class=\"bi bi-person-circle me-2\"></i>{session.get('usuario_nombre','Usuario')}\n            </span>\n            <a href=\"{url_for('logout')}\" class=\"btn btn-outline-light btn-sm\">\n              <i class=\"bi bi-box-arrow-right me-1\"></i>Salir\n            </a>\n          </div>
         </div>
       </nav>
 
-      <section class="hero py-4">
-        <div class="container">
-          <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-            <div>
-              <h1 class="h3 m-0"><i class="bi bi-{icono} me-2"></i>{titulo}</h1>
-              <div class="text-muted">{subtitulo}</div>
-            </div>
-            <span class="tag">En construcción</span>
-          </div>
+      <div class=\"app-window\">
+        <div class=\"app-titlebar\">
+          <div class=\"d-flex align-items-center gap-2\">\n            <span class=\"dot red\"></span>\n            <span class=\"dot yellow\"></span>\n            <span class=\"dot green\"></span>\n          </div>
+          <div class=\"titlebar-text\">\n            <i class=\"bi bi-{icono} me-2\"></i>{titulo}\n          </div>
         </div>
-      </section>
 
-      <main class="container py-4">
-        <div class="row g-4">
-          <div class="col-12 col-lg-8">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Descripción</h5>
-                <p class="mb-0">{descripcion}</p>
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-lg-4">
-            <div class="card">
-              <div class="card-body">
-                <h6 class="card-title">Acciones rápidas</h6>
-                <div class="d-grid gap-2">
-                  <a class="btn btn-primary" href="{url_for('plantillas_datos')}">
-                    <i class="bi bi-filetype-csv me-1"></i> Plantillas de datos
-                  </a>
-                  <a class="btn btn-outline-secondary" href="{url_for('ingesta_datos')}">
-                    <i class="bi bi-upload me-1"></i> Ingesta de datos
-                  </a>
-                  <a class="btn btn-outline-secondary" href="{url_for('roles_permisos')}">
-                    <i class="bi bi-shield-lock me-1"></i> Roles y permisos
-                  </a>
-                  <a class="btn btn-outline-secondary" href="{url_for('ayuda_modulo', modulo=titulo.split()[0].lower())}">
-                    <i class="bi bi-question-circle me-1"></i> Ayuda
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div class="small text-muted mt-3">
-              <i class="bi bi-info-circle me-1"></i> Esta vista es temporal mientras se integran los tableros.
-            </div>
-          </div>
-        </div>
-      </main>
+        <div class=\"app-header\">\n          <div class=\"d-flex justify-content-between align-items-start flex-wrap gap-3\">\n            <div class=\"brand\">\n              <div>\n                <h1>{titulo}</h1>\n                <small>{subtitulo}</small>\n              </div>\n            </div>\n            <div class=\"text-end\">\n              <div class=\"footer-note footer-note-plain\">\n                <i class=\"fas fa-info-circle me-2\"></i> Visualiza y analiza indicadores institucionales\n              </div>\n            </div>\n          </div>\n          <hr>\n        </div>
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <div class=\"app-body\">\n          <div class=\"container\">\n            <div class=\"row g-4\">\n              <div class=\"col-12 col-lg-8\">\n                <div class=\"card\">\n                  <div class=\"card-body\">\n                    <h5 class=\"card-title\">Descripción</h5>\n                    <p class=\"mb-0\">{descripcion}</p>\n                  </div>\n                </div>\n              </div>\n              <div class=\"col-12 col-lg-4\">\n                <div class=\"card\">\n                  <div class=\"card-body\">\n                    <h6 class=\"card-title\">Acciones rápidas</h6>\n                    <div class=\"d-grid gap-2\">\n                      <a class=\"btn btn-primary\" href=\"{url_for('plantillas_datos')}\">\n                        <i class=\"bi bi-filetype-csv me-1\"></i> Plantillas de datos\n                      </a>\n                      <a class=\"btn btn-outline-secondary\" href=\"{url_for('ingesta_datos')}\">\n                        <i class=\"bi bi-upload me-1\"></i> Ingesta de datos\n                      </a>\n                      <a class=\"btn btn-outline-secondary\" href=\"{url_for('roles_permisos')}\">\n                        <i class=\"bi bi-shield-lock me-1\"></i> Roles y permisos\n                      </a>\n                      <a class=\"btn btn-outline-secondary\" href=\"{url_for('ayuda_modulo', modulo=titulo.split()[0].lower())}\">\n                        <i class=\"bi bi-question-circle me-1\"></i> Ayuda\n                      </a>\n                    </div>\n                  </div>\n                </div>\n                <div class=\"small text-muted mt-3\">\n                  <i class=\"bi bi-info-circle me-1\"></i> Vista temporal mientras se integran los tableros.\n                </div>\n              </div>\n            </div>\n          </div>\n        </div>
+      </div>
+
+      <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\"></script>
     </body>
     </html>
     """
 
 
 def _simple_page(titulo: str, cuerpo_html: str) -> str:
-    """Página auxiliar mínima con Bootstrap para secciones simples."""
+    """Página auxiliar mínima con encabezado unificado."""
     return f"""
     <!doctype html>
-    <html lang="es">
+    <html lang=\"es\">
     <head>
-      <meta charset="utf-8"/>
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <meta charset=\"utf-8\"/>
+      <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>
       <title>{titulo} — DUACyD Analítica</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="stylesheet" href="{url_for('static', filename='css/main.css')}">
+      <link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\">
+      <link rel=\"stylesheet\" href=\"{url_for('static', filename='css/main.css')}\">
     </head>
-    <body>
-      <nav class="navbar navbar-dark topbar">
-        <div class="container">
-          <a class="navbar-brand d-flex align-items-center gap-2" href="{url_for('dashboard')}">
-            <img src="{url_for('static', filename='img/logo_duacyd.png')}" width="24" height="24">
-            <span class="fw-bold">DUACyD Analítica</span>
-          </a>
-          <div class="d-flex align-items-center gap-2">
-            <span class="text-white-50 small me-2">
-              <i class="bi bi-person-circle me-1"></i>{session.get('usuario_nombre','Usuario')}
-            </span>
-            <a href="{url_for('logout')}" class="btn btn-outline-light btn-sm">
-              Salir
-            </a>
-          </div>
-        </div>
-      </nav>
+    <body class=\"menu-body\">
+      <nav class=\"navbar navbar-dark\">\n        <div class=\"container\">\n          <a class=\"navbar-brand d-flex align-items-center gap-2\" href=\"{url_for('dashboard')}\">\n            <i class=\"bi bi-grid-1x2\"></i>\n            <span class=\"fw-bold\">DUACyD Analítica</span>\n          </a>\n          <div class=\"d-flex align-items-center gap-3\">\n            <span class=\"user-badge\">\n              <i class=\"bi bi-person-circle me-2\"></i>{session.get('usuario_nombre','Usuario')}\n            </span>\n            <a href=\"{url_for('logout')}\" class=\"btn btn-outline-light btn-sm\">Salir</a>\n          </div>\n        </div>\n      </nav>
 
-      <main class="container py-4">
-        <div class="d-flex align-items-center justify-content-between mb-3">
-          <h1 class="h4 m-0">{titulo}</h1>
-          <a href="{url_for('dashboard')}" class="btn btn-primary">Volver al menú</a>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            {cuerpo_html}
-          </div>
-        </div>
-      </main>
+      <div class=\"app-window\">\n        <div class=\"app-titlebar\">\n          <div class=\"d-flex align-items-center gap-2\">\n            <span class=\"dot red\"></span>\n            <span class=\"dot yellow\"></span>\n            <span class=\"dot green\"></span>\n          </div>\n          <div class=\"titlebar-text\">\n            <i class=\"bi bi-layout-text-window me-2\"></i>{titulo}\n          </div>\n        </div>
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <div class=\"app-header\">\n          <div class=\"d-flex justify-content-between align-items-start flex-wrap gap-3\">\n            <div class=\"brand\">\n              <div>\n                <h1>{titulo}</h1>\n                <small class=\"text-muted\">Sección</small>\n              </div>\n            </div>\n            <div class=\"text-end\">\n              <a href=\"{url_for('dashboard')}\" class=\"btn btn-primary\">Volver al menú</a>\n            </div>\n          </div>\n          <hr>\n        </div>
+
+        <div class=\"app-body\">\n          <div class=\"container\">\n            <div class=\"card\">\n              <div class=\"card-body\">\n                {cuerpo_html}\n              </div>\n            </div>\n          </div>\n        </div>
+      </div>
+
+      <script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js\"></script>
     </body>
     </html>
     """
