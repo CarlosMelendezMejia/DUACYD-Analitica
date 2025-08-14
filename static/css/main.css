@@ -34,11 +34,14 @@ body {
   background:var(--gradiente-principal);
   background-attachment:fixed;
   min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+.login-body{
   display:flex;
   align-items:center;
   justify-content:center;
-  position:relative;
-  overflow-x:hidden;
+  min-height:100vh;
 }
 
 body::before {
@@ -75,6 +78,10 @@ body::before {
   backdrop-filter:blur(20px);
   border-bottom:1px solid rgba(255,255,255,.1);
   box-shadow:var(--sombra-suave);
+  position:sticky;
+  top:0;
+  z-index:1040;
+  width:100%;
 }
 
 .navbar-brand{
@@ -168,6 +175,12 @@ body::before {
   overflow:hidden;
   border:1px solid rgba(255,255,255,.3);
   animation:fadeInUp .8s ease-out;
+}
+
+/* Evita que el contenido quede oculto bajo el navbar sticky */
+.menu-body .app-window,
+.suayed-body .app-window{
+  margin-top:3.5rem; /* altura aprox del navbar */
 }
 
 @keyframes fadeInUp{
