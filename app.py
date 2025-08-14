@@ -86,12 +86,12 @@ def get_db_connection():
 def get_user_by_username(username: str):
     """
     Busca al usuario por username en BD.
-    Tabla esperada `usuarios`:
-      id INT PK AI
-      username VARCHAR(100) UNIQUE
+    Tabla esperada `usuario`:
+      id_usuario INT PK AI
+      correo VARCHAR(150) UNIQUE
       password_hash VARCHAR(255)
-      nombre VARCHAR(150)
-      rol VARCHAR(50) (opcional)
+      nombre y apellidos para nombre completo
+      rol asignado (opcional)
     """
     conn = get_db_connection()
     if conn is None:
@@ -111,9 +111,16 @@ def get_user_by_username(username: str):
         cur = conn.cursor(dictionary=True)
         cur.execute(
             """
-            SELECT id, username, password_hash, nombre, COALESCE(rol, 'usuario') AS rol
-            FROM usuarios
-            WHERE username = %s
+            SELECT
+                u.id_usuario AS id,
+                u.correo AS username,
+                u.password_hash,
+                CONCAT(u.nombre, ' ', u.apellidos) AS nombre,
+                COALESCE(r.nombre, 'usuario') AS rol
+            FROM usuario u
+            LEFT JOIN usuario_rol ur ON ur.id_usuario = u.id_usuario
+            LEFT JOIN rol r ON r.id_rol = ur.id_rol
+            WHERE u.correo = %s
             """,
             (username,),
         )
