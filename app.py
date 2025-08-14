@@ -320,14 +320,7 @@ def _module_placeholder(titulo: str, subtitulo: str, descripcion: str, icono: st
       <title>{titulo} — DUACyD Analítica</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
       <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-      <style>
-        :root{{ --azul-unam:#002147; --dorado-unam:#C9A23F; }}
-        .topbar{{ background: var(--azul-unam); }}
-        .hero{{ background:#f8f9fa; border-bottom:1px solid #e9ecef; }}
-        .tag{{ background: rgba(201,162,63,.14); color: var(--azul-unam); border-radius:999px; padding:.25rem .6rem; font-size:.85rem; }}
-        .btn-primary{{ background: var(--dorado-unam); border:none; }}
-        .btn-primary:hover{{ background:#b28e34; }}
-      </style>
+      <link rel="stylesheet" href="{url_for('static', filename='css/main.css')}">
     </head>
     <body>
       <nav class="navbar navbar-dark topbar">
@@ -412,12 +405,7 @@ def _simple_page(titulo: str, cuerpo_html: str) -> str:
       <meta name="viewport" content="width=device-width, initial-scale=1"/>
       <title>{titulo} — DUACyD Analítica</title>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-      <style>
-        :root{{ --azul-unam:#002147; --dorado-unam:#C9A23F; }}
-        .topbar{{ background: var(--azul-unam); }}
-        .btn-primary{{ background: var(--dorado-unam); border:none; }}
-        .btn-primary:hover{{ background:#b28e34; }}
-      </style>
+      <link rel="stylesheet" href="{url_for('static', filename='css/main.css')}">
     </head>
     <body>
       <nav class="navbar navbar-dark topbar">
