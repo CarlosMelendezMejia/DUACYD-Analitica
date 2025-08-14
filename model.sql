@@ -283,6 +283,7 @@ FOR EACH ROW
 BEGIN
   DECLARE v_area INT;
   DECLARE v_req_carrera TINYINT;
+  DECLARE v_carr_area INT;
   SELECT id_area, requiere_carrera INTO v_area, v_req_carrera
   FROM indicador WHERE id_indicador = NEW.id_indicador;
 
@@ -300,7 +301,6 @@ BEGIN
 
   -- Si hay carrera, debe pertenecer a SUAYED (id_area=1 por seed; o mejor validamos por la carrera misma)
   IF NEW.id_carrera IS NOT NULL THEN
-    DECLARE v_carr_area INT;
     SELECT id_area INTO v_carr_area FROM carrera WHERE id_carrera = NEW.id_carrera;
     IF v_carr_area <> v_area THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La carrera no pertenece al área del indicador.';
@@ -314,6 +314,7 @@ FOR EACH ROW
 BEGIN
   DECLARE v_area INT;
   DECLARE v_req_carrera TINYINT;
+  DECLARE v_carr_area INT;
   SELECT id_area, requiere_carrera INTO v_area, v_req_carrera
   FROM indicador WHERE id_indicador = NEW.id_indicador;
 
@@ -328,7 +329,6 @@ BEGIN
   END IF;
 
   IF NEW.id_carrera IS NOT NULL THEN
-    DECLARE v_carr_area INT;
     SELECT id_area INTO v_carr_area FROM carrera WHERE id_carrera = NEW.id_carrera;
     IF v_carr_area <> v_area THEN
       SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'La carrera no pertenece al área del indicador.';
