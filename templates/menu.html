@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DUACyD Analítica — Menú</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    
+    :root {
+      --color-azul-unam: #002147;
+      --color-dorado-unam: #C9A23F;
+      --color-azul-claro: #0066CC;
+      --color-azul-suave: #0b2f59;
+      --color-gris-suave: #f8fafc;
+      --sombra-suave: 0 10px 25px rgba(0, 33, 71, 0.1);
+      --sombra-intensa: 0 20px 40px rgba(0, 33, 71, 0.15);
+      --sombra-card: 0 8px 25px rgba(0, 33, 71, 0.08);
+      --gradiente-principal: linear-gradient(135deg, var(--color-azul-unam) 0%, var(--color-azul-suave) 100%);
+      --gradiente-dorado: linear-gradient(135deg, var(--color-dorado-unam) 0%, #d4af37 100%);
+      --gradiente-card: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.8) 100%);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--gradiente-principal);
+      background-attachment: fixed;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(201, 162, 63, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 102, 204, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .navbar {
+      background: var(--gradiente-principal) !important;
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: var(--sombra-suave);
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 0.5px;
+    }
+
+    .user-badge {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+
+    .btn-outline-light {
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-light:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: var(--color-dorado-unam);
+      transform: translateY(-1px);
+    }
+
+    .app-window {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      max-width: 1200px;
+      margin: 2rem auto;
+      border-radius: 24px;
+      box-shadow: var(--sombra-intensa);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .app-titlebar {
+      background: linear-gradient(90deg, rgba(248, 250, 252, 0.8) 0%, rgba(241, 245, 249, 0.9) 100%);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 33, 71, 0.08);
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .dot:hover {
+      transform: scale(1.2);
+    }
+
+    .dot.red {
+      background: linear-gradient(135deg, #ff5f57 0%, #ff3b30 100%);
+      box-shadow: 0 2px 8px rgba(255, 95, 87, 0.3);
+    }
+
+    .dot.yellow {
+      background: linear-gradient(135deg, #ffbd2e 0%, #ffa000 100%);
+      box-shadow: 0 2px 8px rgba(255, 189, 46, 0.3);
+    }
+
+    .dot.green {
+      background: linear-gradient(135deg, #28c840 0%, #00c851 100%);
+      box-shadow: 0 2px 8px rgba(40, 200, 64, 0.3);
+    }
+
+    .titlebar-text {
+      margin-left: 0.5rem;
+      color: var(--color-azul-unam);
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
+    }
+
+    .app-header {
+      padding: 2rem 2rem 1rem 2rem;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand h1 {
+      font-size: 2rem;
+      margin: 0;
+      background: var(--gradiente-principal);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .brand small {
+      color: #6b7280;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .app-body {
+      padding: 1.5rem 2rem 2.5rem 2rem;
+    }
+
+    .card-entry {
+      background: var(--gradiente-card);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: pointer;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-entry::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradiente-dorado);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .card-entry:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-entry:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--sombra-intensa);
+      border-color: rgba(201, 162, 63, 0.3);
+    }
+
+    .card-entry .card-body {
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .icon-badge {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(201, 162, 63, 0.15) 0%, rgba(201, 162, 63, 0.05) 100%);
+      border: 2px solid rgba(201, 162, 63, 0.2);
+      color: var(--color-azul-unam);
+      font-size: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .card-entry:hover .icon-badge {
+      background: var(--gradiente-dorado);
+      color: white;
+      transform: scale(1.1);
+      box-shadow: 0 8px 25px rgba(201, 162, 63, 0.3);
+    }
+
+    .card-title {
+      color: var(--color-azul-unam);
+      font-weight: 700;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+      color: #4b5563;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--gradiente-dorado);
+      border: none;
+      border-radius: 12px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #b28e34 0%, #c9a23f 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(201, 162, 63, 0.3);
+    }
+
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+
+    .btn-outline-secondary {
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      color: #6b7280;
+      transition: all 0.3s ease;
+    }
+
+    .btn-outline-secondary:hover {
+      background: var(--color-azul-unam);
+      border-color: var(--color-azul-unam);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: var(--sombra-card);
+    }
+
+    .footer-note {
+      color: #6b7280;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      background: rgba(248, 250, 252, 0.5);
+      padding: 1rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 33, 71, 0.05);
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(0, 33, 71, 0.1), transparent);
+      margin: 1.5rem 0;
+    }
+
+    /* Efectos especiales para cards principales */
+    .main-cards .card-entry {
+      position: relative;
+    }
+
+    .main-cards .card-entry::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at 70% 30%, rgba(201, 162, 63, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .main-cards .card-entry:hover::after {
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .app-window {
+        margin: 1rem;
+        border-radius: 16px;
+      }
+      
+      .app-header, .app-body {
+        padding: 1.5rem;
+      }
+      
+      .brand h1 {
+        font-size: 1.5rem;
+      }
+      
+      .card-entry .card-body {
+        padding: 1.5rem;
+      }
+      
+      .icon-badge {
+        width: 48px;
+        height: 48px;
+        font-size: 1.25rem;
+      }
+    }
+
+    /* Animación de entrada escalonada */
+    .row .col {
+      animation: fadeInUp 0.6s ease-out backwards;
+    }
+
+    .row .col:nth-child(1) { animation-delay: 0.1s; }
+    .row .col:nth-child(2) { animation-delay: 0.2s; }
+    .row .col:nth-child(3) { animation-delay: 0.3s; }
+
+    .row:nth-child(2) .col:nth-child(1) { animation-delay: 0.4s; }
+    .row:nth-child(2) .col:nth-child(2) { animation-delay: 0.5s; }
+    .row:nth-child(2) .col:nth-child(3) { animation-delay: 0.6s; }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar superior -->
+  <nav class="navbar navbar-dark">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="#">
+        
+      <div class="d-flex align-items-center gap-3">
+        <span class="user-badge">
+          <i class="bi bi-person-circle me-2"></i>
+          Usuario Activo
+        </span>
+        <a href="#" class="btn btn-outline-light btn-sm">
+          <i class="bi bi-box-arrow-right me-1"></i>Salir
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Ventana estilo moderno -->
+  <div class="app-window">
+    <!-- Barra de título tipo ventana -->
+    <div class="app-titlebar">
+      <div class="d-flex align-items-center gap-2">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+      </div>
+      <div class="titlebar-text">
+        <i class="fas fa-th-large me-2"></i>
+        Menú Principal
+      </div>
+    </div>
+
+    <!-- Encabezado -->
+    <div class="app-header">
+      <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+        <div class="brand">
+          <div>
+            <h1>Panel de Acceso</h1>
+            <small>Selecciona un módulo para continuar</small>
+          </div>
+        </div>
+        <div class="text-end">
+          <div class="footer-note" style="background: transparent; border: none; padding: 0;">
+            <i class="fas fa-info-circle me-2"></i>
+            Visualiza y analiza indicadores institucionales
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+
+    <!-- Cuerpo con cards -->
+    <div class="app-body">
+      <div class="row g-4 row-cols-1 row-cols-md-3 main-cards">
+
+        <!-- SUAyED -->
+        <div class="col">
+          <div class="card card-entry">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-badge">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                  <h5 class="card-title mb-0">SUAyED</h5>
+                  <small class="text-muted">Derecho • RI • Economía</small>
+                </div>
+              </div>
+              <p class="card-text mt-2 mb-4">
+                Métricas por carrera, cohortes, eficiencia terminal, retención, y análisis de matrícula estudiantil.
+              </p>
+              <div class="mt-auto d-flex gap-2">
+                <a href="#" class="btn btn-primary flex-fill">
+                  <i class="fas fa-arrow-right me-2"></i>Entrar
+                </a>
+                <a href="#" class="btn btn-outline-secondary">
+                  <i class="fas fa-question-circle"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Educación Continua (EDCO) -->
+        <div class="col">
+          <div class="card card-entry">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-badge">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                  <h5 class="card-title mb-0">Educación Continua</h5>
+                  <small class="text-muted">EDCO • Cursos • Diplomados</small>
+                </div>
+              </div>
+              <p class="card-text mt-2 mb-4">
+                Ofertas académicas, inscripciones, satisfacción estudiantil, ingresos y trazabilidad por periodo.
+              </p>
+              <div class="mt-auto d-flex gap-2">
+                <a href="#" class="btn btn-primary flex-fill">
+                  <i class="fas fa-arrow-right me-2"></i>Entrar
+                </a>
+                <a href="#" class="btn btn-outline-secondary">
+                  <i class="fas fa-question-circle"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Centro de Lenguas (CLE) -->
+        <div class="col">
+          <div class="card card-entry">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-badge">
+                  <i class="fas fa-language"></i>
+                </div>
+                <div>
+                  <h5 class="card-title mb-0">Centro de Lenguas</h5>
+                  <small class="text-muted">CLE • Idiomas • Certificaciones</small>
+                </div>
+              </div>
+              <p class="card-text mt-2 mb-4">
+                Estudiantes por idioma y nivel, tasas de aprobación, deserción y resultados de exámenes oficiales.
+              </p>
+              <div class="mt-auto d-flex gap-2">
+                <a href="#" class="btn btn-primary flex-fill">
+                  <i class="fas fa-arrow-right me-2"></i>Entrar
+                </a>
+                <a href="#" class="btn btn-outline-secondary">
+                  <i class="fas fa-question-circle"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Fila adicional para herramientas -->
+      <div class="row g-4 mt-2 row-cols-1 row-cols-md-3">
+        <div class="col">
+          <div class="card card-entry h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-badge">
+                  <i class="fas fa-upload"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-bold">Gestión de Datos</h6>
+                  <small class="text-muted">CSV • XLSX • API</small>
+                </div>
+              </div>
+              <p class="mb-4">Carga y actualiza datasets para mantener los tableros siempre actualizados.</p>
+              <a href="#" class="btn btn-outline-secondary mt-auto">
+                <i class="fas fa-database me-2"></i>
+                Gestionar ingesta
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card card-entry h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-badge">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-bold">Control de Acceso</h6>
+                  <small class="text-muted">Roles • Permisos</small>
+                </div>
+              </div>
+              <p class="mb-4">Administra roles de usuario y define permisos de visualización y edición.</p>
+              <a href="#" class="btn btn-outline-secondary mt-auto">
+                <i class="fas fa-users-cog me-2"></i>
+                Configurar
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col">
+          <div class="card card-entry h-100">
+            <div class="card-body d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="icon-badge">
+                  <i class="fas fa-file-download"></i>
+                </div>
+                <div>
+                  <h6 class="mb-0 fw-bold">Plantillas</h6>
+                  <small class="text-muted">Formatos • Esquemas</small>
+                </div>
+              </div>
+              <p class="mb-4">Descarga plantillas estandarizadas para preparar archivos de carga de datos.</p>
+              <a href="#" class="btn btn-outline-secondary mt-auto">
+                <i class="fas fa-download me-2"></i>
+                Ver plantillas
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-note mt-4">
+        <i class="fas fa-shield-check me-2"></i>
+        Sesión activa para <strong>Usuario Administrador</strong>
+        <span class="mx-2">•</span>
+        <i class="fas fa-clock me-1"></i>
+        Última actividad: hace 2 minutos
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Efectos interactivos mejorados
+    document.querySelectorAll('.card-entry').forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+
+    // Efecto de ondas en botones
+    document.querySelectorAll('.btn-primary').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        let ripple = document.createElement('span');
+        let rect = this.getBoundingClientRect();
+        let size = Math.max(rect.width, rect.height);
+        let x = e.clientX - rect.left - size / 2;
+        let y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.classList.add('ripple');
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // Animación de los dots en la titlebar
+    document.querySelectorAll('.dot').forEach((dot, index) => {
+      dot.addEventListener('click', function() {
+        this.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1.2)';
+          setTimeout(() => {
+            this.style.transform = 'scale(1)';
+          }, 150);
+        }, 100);
+      });
+    });
+  </script>
+
+  <style>
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(0);
+      animation: ripple-animation 0.6s linear;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+  </style>
+</body>
+</html>
